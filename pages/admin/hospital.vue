@@ -1,5 +1,10 @@
 <template>
   <div class="table-wrapper">
+    <hospital-form
+      v-show="hospitalDialogOpened"
+      @close="hospitalDialogOpened = false"
+    />
+
     <v-data-table
       v-model="selected"
       :headers="headers"
@@ -20,6 +25,7 @@
             fab
             color="deep-purple lighten-2"
             dark
+            @click="hospitalDialogOpened = true"
           >
             <v-icon>
               mdi-plus
@@ -30,10 +36,10 @@
     </v-data-table>
 
     <v-pagination
-      class='mt-5'
+      class="mt-5"
       @input="onPageChange"
       v-model="page"
-      color='deep-purple lighten-2'
+      color="deep-purple lighten-2"
       circle
       :length="10"
     ></v-pagination>
@@ -41,47 +47,52 @@
 </template>
 
 <script>
+import hospitalForm from '../../components/admin/hospital-form.vue';
 export default {
+  components: { hospitalForm },
   layout: 'admin',
 
   async fetch(ctx) {
     try {
       await ctx.store.dispatch('admin-hospitals/fetchHospitals', {});
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   },
 
   methods: {
     async onPageChange() {
-      try{
-        await this.$store.dispatch('admin-hospitals/fetchHospitals', {page: this.page});
+      try {
+        await this.$store.dispatch('admin-hospitals/fetchHospitals', {
+          page: this.page,
+        });
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
+    },
   },
 
   computed: {
     items() {
-      return this.$store.getters['admin-hospitals/getHospitals']
-    }
+      return this.$store.getters['admin-hospitals/getHospitals'];
+    },
   },
 
   data() {
     return {
       selected: [],
+      hospitalDialogOpened: false,
       headers: [
         { text: 'Hospital ID', value: 'id' },
         { text: 'City', value: 'city' },
         { text: 'Title', value: 'name' },
-        { text: 'Address', value: 'address' }
+        { text: 'Address', value: 'address' },
       ],
       limit: 10,
       offset: 0,
       page: 1,
     };
-  }
+  },
 };
 </script>
 
