@@ -1,26 +1,31 @@
 <template>
   <v-app>
     <v-app-bar app>
-      <nuxt-link class="no-outline" to="/admin">
-        <v-btn text rounded fab>
-          <v-icon>mdi-home</v-icon>
-        </v-btn>
-      </nuxt-link>
+      <!-- <nuxt-link class="no-outline" to="/admin"> -->
+      <v-btn text rounded fab>
+        <v-icon>mdi-home</v-icon>
+      </v-btn>
+      <!-- </nuxt-link> -->
 
       <v-spacer />
 
-      <nuxt-link class="no-outline" to="/admin">
-        <v-btn text>
+      <!-- <nuxt-link class="no-outline" to="/admin">
+        <v-btn class="nuxt-link-button" text>
           Головна
         </v-btn>
-      </nuxt-link>
+      </nuxt-link> -->
       <nuxt-link class="no-outline" to="/admin/hospital">
-        <v-btn text>
+        <v-btn class="nuxt-link-button" text>
           Лікарні
         </v-btn>
       </nuxt-link>
+      <nuxt-link class="no-outline" to="/admin/users">
+        <v-btn class="nuxt-link-button" text>
+          Користувачі
+        </v-btn>
+      </nuxt-link>
       <nuxt-link class="no-outline" to="/admin/stats">
-        <v-btn text>
+        <v-btn class="nuxt-link-button" text>
           Статистика
         </v-btn>
       </nuxt-link>

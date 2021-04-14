@@ -30,3 +30,13 @@ html {
     border-radius: 10px;
   }
 }
+
+.nuxt-link-exact-active {
+  .nuxt-link-button {
+    background-color: #9575cd;
+    border-color: #9575cd;
+    span {
+      color: white;
+    }
+  }
+}
