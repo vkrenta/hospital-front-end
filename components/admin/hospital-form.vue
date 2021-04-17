@@ -65,8 +65,15 @@ export default {
     };
   },
   methods: {
-    onSave() {
-      this.$refs.form.validate();
+    async onSave() {
+      if (this.$refs.form.validate()) {
+        await this.$userAxios.post('/api/hospitals', {
+          id: this.id,
+          city: this.city,
+          title: this.title,
+          address: this.address,
+        });
+      }
     },
     onClose() {
       this.$refs.form.reset();

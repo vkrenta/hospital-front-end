@@ -18,7 +18,9 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Всього лікарень: <span>100</span></v-toolbar-title>
+          <v-toolbar-title
+            >Всього лікарень: <span>{{ hospitalsCount }}</span></v-toolbar-title
+          >
           <v-spacer></v-spacer>
           <v-btn
             rounded
@@ -41,8 +43,8 @@
       v-model="page"
       color="deep-purple lighten-2"
       circle
-      :length="10"
-    ></v-pagination>
+      :length="hospitalsCount"
+    />
   </div>
 </template>
 
@@ -54,7 +56,10 @@ export default {
 
   async fetch(ctx) {
     try {
-      await ctx.store.dispatch('admin-hospitals/fetchHospitals', {});
+      await Promise.all([
+        ctx.store.dispatch('admin-hospitals/fetchHospitals', {}),
+        ctx.store.dispatch('admin-hospitals/fetchHospitalsCount'),
+      ]);
     } catch (error) {
       console.log(error);
     }
@@ -75,6 +80,10 @@ export default {
   computed: {
     items() {
       return this.$store.getters['admin-hospitals/getHospitals'];
+    },
+
+    hospitalsCount() {
+      return this.$store.getters['admin-hospitals/getHospitalsCount'];
     },
   },
 

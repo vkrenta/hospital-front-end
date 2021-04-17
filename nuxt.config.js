@@ -38,8 +38,12 @@ export default {
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
-  axios: {
-    baseUrl: 'https://mockend.com/vkrenta/hospital-mock-json/',
+  // axios: {
+  //   baseUrl: 'https://mockend.com/vkrenta/hospital-mock-json/',
+  // },
+
+  publicRuntimeConfig: {
+    serverURL: 'http://localhost:8000'
   },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)

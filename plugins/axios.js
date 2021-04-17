@@ -1,4 +1,17 @@
-export default function({$axios}) {
-  console.log('axios called')
-  // $axios.setToken('token stub', 'Bearer')
+export default function({ $axios, $config }, inject) {
+  $axios.setBaseURL($config.serverURL);
+
+  $axios.onError(error => {
+    console.log(error);
+  });
+
+  const userAxios = $axios.create({
+    baseURL: $config.serverURL,
+  });
+
+  userAxios.onError(error => {
+    console.log(error);
+  });
+
+  inject('userAxios', userAxios);
 }
