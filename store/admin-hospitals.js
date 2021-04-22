@@ -1,6 +1,7 @@
 export const state = () => ({
   hospitals: [],
   count: 0,
+  hospitalNames: [],
 });
 
 export const mutations = {
@@ -9,6 +10,9 @@ export const mutations = {
   },
   setHospitalsCount(state, data) {
     state.hospitalsCount = data;
+  },
+  setHospitalNames(state, data) {
+    state.hospitalNames = data;
   },
 };
 
@@ -32,6 +36,14 @@ export const actions = {
 
     return count;
   },
+
+  async fetchHospitalNames({ commit }) {
+    const namesOfHospitals = await this.$userAxios.$get('/api/hospitals/names');
+
+    console.log(namesOfHospitals);
+
+    commit('setHospitalNames', namesOfHospitals);
+  },
 };
 
 export const getters = {
@@ -41,5 +53,9 @@ export const getters = {
 
   getHospitalsCount({ hospitalsCount }) {
     return hospitalsCount;
+  },
+
+  getHospitalNames({ hospitalNames }) {
+    return hospitalNames;
   },
 };

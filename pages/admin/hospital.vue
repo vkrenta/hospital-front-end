@@ -43,7 +43,7 @@
       v-model="page"
       color="deep-purple lighten-2"
       circle
-      :length="hospitalsCount"
+      :length="pages"
     />
   </div>
 </template>
@@ -84,6 +84,10 @@ export default {
 
     hospitalsCount() {
       return this.$store.getters['admin-hospitals/getHospitalsCount'];
+    },
+
+    pages() {
+      return Math.ceil(this.hospitalsCount / this.$config.pageLimit);
     },
   },
 

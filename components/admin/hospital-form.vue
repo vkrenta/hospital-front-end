@@ -49,14 +49,18 @@
 </template>
 
 <script>
-import { idValidator, titleValidator } from '~/helpers/validators';
+import {
+  idValidator,
+  titleValidator,
+  addressValidator,
+} from '~/helpers/validators';
 import { cities } from '~/helpers/cities';
 export default {
   data() {
     return {
       idRules: [idValidator],
       titleRules: [titleValidator],
-      addressRules: [titleValidator],
+      addressRules: [addressValidator],
       cities,
       id: '',
       city: '',

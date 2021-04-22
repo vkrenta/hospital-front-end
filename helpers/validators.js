@@ -10,3 +10,8 @@ export const titleValidator = value => {
   if (!value) return "Обов'язкове поле";
   if (value.length > 50) return 'Забагато символів';
 };
+
+export const addressValidator = value => {
+  if (!value) return "Обов'язкове поле";
+  if (value.length > 50) return 'Забагато символів';
+};

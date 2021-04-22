@@ -43,7 +43,8 @@ export default {
   // },
 
   publicRuntimeConfig: {
-    serverURL: 'http://localhost:8000'
+    serverURL: 'http://localhost:8000',
+    pageLimit: 10,
   },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
