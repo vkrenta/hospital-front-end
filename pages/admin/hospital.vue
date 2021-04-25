@@ -12,8 +12,8 @@
       :page.sync="page"
       :items-per-page="limit"
       hide-default-footer
-      item-key="id"
-      show-select
+      item-key="_id"
+      no-data-text="Немає даних"
       class="elevation-1"
     >
       <template v-slot:top>
@@ -83,7 +83,7 @@ export default {
     },
 
     hospitalsCount() {
-      return this.$store.getters['admin-hospitals/getHospitalsCount'];
+      return this.$store.getters['admin-hospitals/getHospitalsCount'] ?? 0;
     },
 
     pages() {
@@ -98,8 +98,9 @@ export default {
       headers: [
         { text: 'Код лікарні', value: 'id' },
         { text: 'Населений пункт', value: 'city' },
-        { text: 'Назва', value: 'name' },
+        { text: 'Назва', value: 'title' },
         { text: 'Адреса', value: 'address' },
+        { text: 'Ліжкомісць', value: 'totalBeds' },
       ],
       limit: 10,
       offset: 0,

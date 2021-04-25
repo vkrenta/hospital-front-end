@@ -3,6 +3,8 @@ export default function({ $axios, $config }, inject) {
 
   $axios.onError(error => {
     console.log(error);
+
+    return Promise.reject();
   });
 
   const userAxios = $axios.create({
@@ -11,6 +13,8 @@ export default function({ $axios, $config }, inject) {
 
   userAxios.onError(error => {
     console.log(error);
+
+    return Promise.reject();
   });
 
   inject('userAxios', userAxios);

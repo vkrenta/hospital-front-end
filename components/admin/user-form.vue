@@ -88,6 +88,7 @@ export default {
   methods: {
     async onSave() {
       if (this.$refs.form.validate()) {
+        console.log(this.selectedHospital);
         await this.$userAxios.post('/api/users', {
           login: this.login,
           password: this.password,

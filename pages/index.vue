@@ -7,18 +7,22 @@
         <v-form ref="form" @submit.prevent="submitForm">
           <v-text-field
             color="deep-purple"
+            v-model="login"
             required
             label="Логін"
             :rules="formRules"
           ></v-text-field>
           <v-text-field
             color="deep-purple"
+            v-model="password"
             required
             label="Пароль"
             :rules="formRules"
+            type="password"
           ></v-text-field>
 
           <div class="button-wrapper">
+            <nuxt-link to="/">Забули пароль?</nuxt-link>
             <v-btn type="submit" color="deep-purple lighten-2" dark>
               Увійти
             </v-btn>
@@ -35,15 +39,31 @@ export default {
     return {
       formRules: [v => !!v || 'Обовʼязкове поле!'],
       login: '',
-      password: ''
+      password: '',
     };
   },
 
   methods: {
-    submitForm() {
-      this.$refs.form.validate();
-    }
-  }
+    async submitForm() {
+      if (this.$refs.form.validate()) {
+        try {
+          const user = await this.$userAxios.$post(
+            '/api/users/getUserByCredentials',
+            {
+              login: this.login,
+              password: this.password,
+            }
+          );
+          localStorage.setItem('user', JSON.stringify(user));
+          if (user.role === 'SUPERADMIN') this.$router.push('/admin/hospital');
+          else this.$router.push('/hospital/patients');
+          // this.$store.commit('user/setUser', user);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    },
+  },
 };
 </script>
 
@@ -65,7 +85,7 @@ export default {
 .button-wrapper {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   width: 100%;
 }
 </style>

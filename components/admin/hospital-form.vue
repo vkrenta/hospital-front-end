@@ -10,7 +10,7 @@
           :rules="idRules"
           v-model="id"
         ></v-text-field>
-        <div class="title-text subtitle-1">Місто</div>
+        <div class="title-text subtitle-1">Нас. пункт</div>
         <v-autocomplete
           v-model="city"
           outlined
@@ -37,6 +37,15 @@
           required
           counter="50"
           :rules="addressRules"
+        ></v-text-field>
+        <div class="title-text subtitle-1">К-сть ліжкомісць</div>
+        <v-text-field
+          type="number"
+          min="0"
+          outlined
+          color="deep-purple"
+          required
+          v-model="totalBeds"
         ></v-text-field>
       </div>
 
@@ -66,6 +75,7 @@ export default {
       city: '',
       title: '',
       address: '',
+      totalBeds: 10,
     };
   },
   methods: {
@@ -76,6 +86,7 @@ export default {
           city: this.city,
           title: this.title,
           address: this.address,
+          totalBeds: this.totalBeds,
         });
       }
     },
