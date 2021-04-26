@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export default function({ $axios, $config }, inject) {
   $axios.setBaseURL($config.serverURL);
 
@@ -18,4 +20,5 @@ export default function({ $axios, $config }, inject) {
   });
 
   inject('userAxios', userAxios);
+  inject('moment', moment);
 }

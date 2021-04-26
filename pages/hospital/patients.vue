@@ -1,6 +1,9 @@
 <template>
   <div class="patients-container">
-    <patient-form />
+    <patient-form
+      v-show="patientDialogShowed"
+      @close="patientDialogShowed = false"
+    />
     <div class="header-section">
       <div class="text-h4" style="display: flex; align-items: flex-start">
         Пацієнти <span class="text-h6">{{ [patients.length] }}</span>
@@ -10,7 +13,7 @@
         fab
         color="deep-purple lighten-2"
         dark
-        @click="hospitalDialogOpened = true"
+        @click="patientDialogShowed = true"
       >
         <v-icon>
           mdi-plus
@@ -45,6 +48,7 @@ export default {
   components: { patientForm },
   data() {
     return {
+      patientDialogShowed: false,
       patients: [
         {
           _id: 1,
@@ -55,7 +59,7 @@ export default {
           condition: 'Тяжкий',
         },
         {
-          _id: 1,
+          _id: 2,
           name: 'Петренко Петро Петрович',
           hospitalizedAt: '21.04.2021',
           gender: 'Чоловіча',
@@ -63,7 +67,7 @@ export default {
           condition: 'Середньої тяжкості',
         },
         {
-          _id: 1,
+          _id: 3,
           name: 'Іваненко Іванна Іванівна',
           hospitalizedAt: '21.04.2021',
           gender: 'Жіноча',
@@ -71,12 +75,20 @@ export default {
           condition: 'Надміру тяжкий',
         },
         {
-          _id: 1,
+          _id: 3,
           name: 'Чорна Ірина Ігорівна',
           hospitalizedAt: '21.04.2021',
           gender: 'Жіноча',
           age: '18',
           condition: 'Задовільний',
+        },
+        {
+          _id: 4,
+          name: 'Андрієнко Андрій Андрійович',
+          hospitalizedAt: '26.04.2021',
+          gender: 'Чоловіча',
+          age: '35',
+          condition: 'Середньої тяжкості',
         },
       ],
     };

@@ -18,6 +18,9 @@
             : ''
         }}</span>
       </template>
+      <template v-slot:item.createdAt="{ item }">
+        <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
+      </template>
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title

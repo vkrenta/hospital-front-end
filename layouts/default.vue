@@ -3,5 +3,3 @@
     <nuxt />
   </v-app>
 </template>
-
-<script></script>
