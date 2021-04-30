@@ -11,6 +11,17 @@
       <v-btn
         rounded
         fab
+        style="margin-left: auto; margin-right: 4%"
+        color="green lighten-2"
+        dark
+      >
+        <v-icon>
+          mdi-file-upload
+        </v-icon>
+      </v-btn>
+      <v-btn
+        rounded
+        fab
         color="deep-purple lighten-2"
         dark
         @click="patientDialogShowed = true"
@@ -19,6 +30,38 @@
           mdi-plus
         </v-icon>
       </v-btn>
+    </div>
+
+    <!-- <div class="dialog-overlay">
+      <div class="dialog-wrapper">
+        <div class="mb-3 text-h5">Завантаження пацієнтів</div>
+        <v-file-input
+          :disabled="loading"
+          outlined
+          placeholder="Формат файлу .csv"
+          style="width: 400px"
+        ></v-file-input>
+        <div
+          style="display: flex;flex-direction: row;justify-content: flex-end;gap: 10px;"
+        >
+          <v-btn @click="onClose">Відміна</v-btn>
+          <v-btn
+            type="submit"
+            :loading="loading"
+            @click="loading = true"
+            color="green lighten-2"
+            dark
+            >Надіслати</v-btn
+          >
+        </div>
+      </div>
+    </div> -->
+
+    <div
+      v-if="!patients.length"
+      style="text-align: center; opacity: 0.4; margin-top: 80px"
+    >
+      Немає даних
     </div>
 
     <div class="cards-grid">
@@ -49,6 +92,7 @@ export default {
   data() {
     return {
       patientDialogShowed: false,
+      loading: false,
       patients: [
         {
           _id: 1,
