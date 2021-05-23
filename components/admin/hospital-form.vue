@@ -81,13 +81,16 @@ export default {
   methods: {
     async onSave() {
       if (this.$refs.form.validate()) {
-        await this.$userAxios.post('/api/hospitals', {
-          id: this.id,
-          city: this.city,
-          title: this.title,
-          address: this.address,
-          totalBeds: this.totalBeds,
-        });
+        try {
+          await this.$userAxios.post('/api/hospitals', {
+            id: this.id,
+            city: this.city,
+            title: this.title,
+            address: this.address,
+            totalBeds: this.totalBeds,
+          });
+          this.onClose();
+        } catch (error) {}
       }
     },
     onClose() {

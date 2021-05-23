@@ -1,9 +1,6 @@
 <template>
   <div class="table-wrapper">
-    <hospital-form
-      v-show="hospitalDialogOpened"
-      @close="hospitalDialogOpened = false"
-    />
+    <hospital-form v-show="hospitalDialogOpened" @close="dialogClose" />
 
     <v-data-table
       v-model="selected"
@@ -66,6 +63,11 @@ export default {
   },
 
   methods: {
+    async dialogClose() {
+      this.hospitalDialogOpened = false;
+      await this.$store.dispatch('admin-hospitals/fetchHospitals', {});
+      await this.$store.dispatch('admin-hospitals/fetchHospitalsCount');
+    },
     async onPageChange() {
       try {
         await this.$store.dispatch('admin-hospitals/fetchHospitals', {
@@ -83,7 +85,7 @@ export default {
     },
 
     hospitalsCount() {
-      return this.$store.getters['admin-hospitals/getHospitalsCount'] ?? 0;
+      return this.$store.getters['admin-hospitals/getHospitalsCount'];
     },
 
     pages() {
@@ -97,7 +99,7 @@ export default {
       hospitalDialogOpened: false,
       headers: [
         { text: 'Код лікарні', value: 'id' },
-        { text: 'Населений пункт', value: 'city' },
+        { text: 'Населений пункт', value: 'city.title' },
         { text: 'Назва', value: 'title' },
         { text: 'Адреса', value: 'address' },
         { text: 'Ліжкомісць', value: 'totalBeds' },

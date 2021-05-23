@@ -1,7 +1,7 @@
 export const state = () => ({
   hospitals: [],
-  count: 0,
   hospitalNames: [],
+  hospitalsCount: 0,
 });
 
 export const mutations = {
@@ -32,6 +32,8 @@ export const actions = {
       data: { count },
     } = await this.$userAxios.get('/api/hospitals/count');
 
+    console.log(count);
+
     commit('setHospitalsCount', count);
 
     return count;
@@ -39,8 +41,6 @@ export const actions = {
 
   async fetchHospitalNames({ commit }) {
     const namesOfHospitals = await this.$userAxios.$get('/api/hospitals/names');
-
-    console.log(namesOfHospitals);
 
     commit('setHospitalNames', namesOfHospitals);
   },

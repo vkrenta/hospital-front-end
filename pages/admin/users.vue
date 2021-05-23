@@ -1,6 +1,6 @@
 <template>
   <div class="table-wrapper">
-    <user-form v-show="userDialogOpened" @close="userDialogOpened = false" />
+    <user-form v-show="userDialogOpened" @close="dialogClose" />
     <v-data-table
       v-model="selected"
       :headers="headers"
@@ -11,14 +11,14 @@
       item-key="_id"
       class="elevation-1"
     >
-      <template v-slot:item.hospitalId="{ item }">
+      <template v-slot:[`item.hospitalId`]="{ item }">
         <span>{{
           !!item.hospitalId
-            ? `${item.hospitalId.id}, ${item.hospitalId.city}, ${item.hospitalId.title}`
+            ? `${item.hospitalId.id}, ${item.hospitalId.city.title}, ${item.hospitalId.title}`
             : ''
         }}</span>
       </template>
-      <template v-slot:item.createdAt="{ item }">
+      <template v-slot:[`item.createdAt`]="{ item }">
         <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
       </template>
       <template v-slot:top>
@@ -60,12 +60,12 @@ export default {
   layout: 'admin',
   async fetch(ctx) {
     await ctx.store.dispatch('admin-hospitals/fetchHospitalNames');
-    console.log(ctx.store.getters['admin-hospitals/getHospitalNames']);
   },
   async asyncData(ctx) {
     const { count: usersCount } = await ctx.$userAxios.$get('/api/users/count');
     const users = await ctx.$userAxios.$get('/api/users?page=1');
 
+    console.log(users);
     return {
       usersCount,
       users,
@@ -89,6 +89,11 @@ export default {
     };
   },
   methods: {
+    async dialogClose() {
+      this.userDialogOpened = false;
+      this.users = await this.$userAxios.$get('/api/users?page=' + this.page);
+      this.usersCount = (await this.$userAxios.$get('/api/users/count')).count;
+    },
     async onPageChange() {
       this.users = await this.$userAxios.$get('/api/users?page=' + this.page);
     },
