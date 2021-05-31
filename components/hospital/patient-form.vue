@@ -14,6 +14,8 @@
         <div class="c-row">
           <v-select
             outlined
+            item-text="text"
+            item-value="value"
             label="Стать"
             :items="genders"
             v-model="patient.gender"
@@ -21,6 +23,7 @@
           <v-text-field
             min="0"
             type="number"
+            v-model="patient.age"
             outlined
             label="Вік"
           ></v-text-field>
@@ -39,7 +42,7 @@
             chips
             multiple
             label="Симптоми"
-            v-model="patient.symptoms"
+            v-model="patient.symptomIds"
           ></v-select>
           <v-select
             outlined
@@ -107,8 +110,8 @@
 
         <v-dialog
           ref="sdialog"
-          v-model="patient.resultAt"
-          :return-value.sync="sdate"
+          v-model="smodal"
+          :return-value.sync="patient.resultAt"
           persistent
           width="290px"
         >
@@ -135,7 +138,7 @@
       </div>
 
       <div class="dialog-buttons">
-        <v-btn @click="onClose">Відміна</v-btn>
+        <v-btn @click="onClose()">Відміна</v-btn>
         <v-btn type="submit" color="deep-purple lighten-2" dark>Зберегти</v-btn>
       </div>
     </v-form>
@@ -144,11 +147,6 @@
 
 <script>
 export default {
-  methods: {
-    onClose() {
-      this.$emit('close');
-    },
-  },
   async beforeCreate() {
     const diagnosis = await this.$axios.$get('/api/patients/diagnosis');
     const symptoms = await this.$axios.$get('/api/patients/symptoms');
@@ -157,11 +155,22 @@ export default {
     this.symptoms = symptoms;
   },
   methods: {
-    onSubmit() {},
+    onClose() {
+      this.$emit('close');
+    },
+    onSubmit() {
+      try {
+        console.log(this.patient);
+        this.$axios.$post('/api/patients', this.patient);
+      } catch (error) {}
+    },
   },
   data() {
     return {
-      genders: ['Чоловіча', 'Жіноча'],
+      genders: [
+        { value: 1, text: 'Чоловіча' },
+        { value: 2, text: 'Жіноча' },
+      ],
       conditions: [
         'Задовільний',
         'Середньої тяжкості',
