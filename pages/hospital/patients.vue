@@ -1,8 +1,9 @@
 <template>
   <div class="patients-container">
     <patient-form
-      v-show="patientDialogShowed"
+      v-if="patientDialogShowed"
       @close="patientDialogShowed = false"
+      @save="onSave()"
     />
     <div class="header-section">
       <div class="text-h4" style="display: flex; align-items: flex-start">
@@ -14,6 +15,7 @@
         style="margin-left: auto; margin-right: 4%"
         color="green lighten-2"
         dark
+        @click="csvOpened = true"
       >
         <v-icon>
           mdi-file-upload
@@ -32,7 +34,7 @@
       </v-btn>
     </div>
 
-    <!-- <div class="dialog-overlay">
+    <div class="dialog-overlay" v-if="csvOpened">
       <div class="dialog-wrapper">
         <div class="mb-3 text-h5">Завантаження пацієнтів</div>
         <v-file-input
@@ -40,22 +42,23 @@
           outlined
           placeholder="Формат файлу .csv"
           style="width: 400px"
+          v-model="file"
         ></v-file-input>
         <div
           style="display: flex;flex-direction: row;justify-content: flex-end;gap: 10px;"
         >
-          <v-btn @click="onClose">Відміна</v-btn>
+          <v-btn @click="csvOpened = false">Відміна</v-btn>
           <v-btn
             type="submit"
             :loading="loading"
-            @click="loading = true"
+            @click="onSubmitFile()"
             color="green lighten-2"
             dark
             >Надіслати</v-btn
           >
         </div>
       </div>
-    </div> -->
+    </div>
 
     <div
       v-if="!patients.length"
@@ -66,7 +69,9 @@
 
     <div class="cards-grid">
       <div v-for="item in patients" :key="item._id" class="card">
-        <div class="title">{{ item.hospitalizedAt }}</div>
+        <div class="title">
+          {{ $moment(item.hospitalizedAt).format('DD.MM.YYYY') }}
+        </div>
 
         <div class="text-subtitle-2">{{ item.name }}</div>
 
@@ -89,52 +94,45 @@ import patientForm from '~/components/hospital/patient-form.vue';
 export default {
   layout: 'admin',
   components: { patientForm },
+  async asyncData({ $axios }) {
+    const patients = await $axios.$get(
+      '/api/patients/' + JSON.parse(localStorage.getItem('user')).hospitalId
+    );
+
+    return {
+      patients,
+    };
+  },
+  computed: {
+    hospitalId() {
+      return JSON.parse(localStorage.getItem('user')).hospitalId;
+    },
+  },
+  methods: {
+    async onSave() {
+      this.patients = await this.$axios.$get(
+        '/api/patients/' + JSON.parse(localStorage.getItem('user')).hospitalId
+      );
+    },
+    onSubmitFile() {
+      // loading = true
+      try {
+        const bodyFormData = new FormData();
+        bodyFormData.append('CSV', this.file);
+
+        this.$axios.$post('/api/patients/csv', bodyFormData);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
   data() {
     return {
       patientDialogShowed: false,
       loading: false,
-      patients: [
-        // {
-        //   _id: 1,
-        //   name: 'Крента Василь Степанович',
-        //   hospitalizedAt: '21.04.2021',
-        //   gender: 'Чоловіча',
-        //   age: '22',
-        //   condition: 'Тяжкий',
-        // },
-        // {
-        //   _id: 2,
-        //   name: 'Петренко Петро Петрович',
-        //   hospitalizedAt: '21.04.2021',
-        //   gender: 'Чоловіча',
-        //   age: '25',
-        //   condition: 'Середньої тяжкості',
-        // },
-        // {
-        //   _id: 3,
-        //   name: 'Іваненко Іванна Іванівна',
-        //   hospitalizedAt: '21.04.2021',
-        //   gender: 'Жіноча',
-        //   age: '20',
-        //   condition: 'Надміру тяжкий',
-        // },
-        // {
-        //   _id: 3,
-        //   name: 'Чорна Ірина Ігорівна',
-        //   hospitalizedAt: '21.04.2021',
-        //   gender: 'Жіноча',
-        //   age: '18',
-        //   condition: 'Задовільний',
-        // },
-        // {
-        //   _id: 4,
-        //   name: 'Андрієнко Андрій Андрійович',
-        //   hospitalizedAt: '26.04.2021',
-        //   gender: 'Чоловіча',
-        //   age: '35',
-        //   condition: 'Середньої тяжкості',
-        // },
-      ],
+      patients: [],
+      csvOpened: false,
+      file: null,
     };
   },
 };

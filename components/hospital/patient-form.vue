@@ -47,7 +47,7 @@
           <v-select
             outlined
             :items="diagnosis"
-            v-model="patient.diagnose"
+            v-model="patient.diagnoseId"
             label="Діагноз"
           ></v-select>
         </div>
@@ -158,10 +158,14 @@ export default {
     onClose() {
       this.$emit('close');
     },
-    onSubmit() {
+    async onSubmit() {
       try {
-        console.log(this.patient);
-        this.$axios.$post('/api/patients', this.patient);
+        this.patient.hospitalId = JSON.parse(
+          localStorage.getItem('user')
+        ).hospitalId;
+        await this.$axios.$post('/api/patients', this.patient);
+        this.$emit('save');
+        this.onClose();
       } catch (error) {}
     },
   },
@@ -185,7 +189,7 @@ export default {
       fdate: '',
       fmodal: false,
       patient: {
-        hospitalId: localStorage.getItem('user').hospitalId,
+        hospitalId: '',
         name: '',
         gender: 'Чоловіча',
         age: 0,
