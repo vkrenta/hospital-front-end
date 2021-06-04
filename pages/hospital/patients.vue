@@ -119,6 +119,7 @@ export default {
       try {
         const bodyFormData = new FormData();
         bodyFormData.append('CSV', this.file);
+        bodyFormData.append('HospitalId', this.hospitalId);
 
         this.$axios.$post('/api/patients/csv', bodyFormData);
       } catch (error) {
