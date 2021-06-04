@@ -3,25 +3,25 @@
     <div class="stats-container">
       <div class="cards-grid">
         <v-sheet class="paper" color="white" elevation="2" outlined rounded>
-          <div class="text-h1">15</div>
+          <div class="text-h1">{{ hospitals }}</div>
           <div class="card-description">
             Зареєстровано лікарень
           </div>
         </v-sheet>
         <v-sheet class="paper" color="white" elevation="2" outlined rounded>
-          <div class="text-h1">31</div>
+          <div class="text-h1">{{ hospitalizations }}</div>
           <div class="card-description">
             Госпіталізацій
           </div></v-sheet
         >
         <v-sheet class="paper" color="white" elevation="2" outlined rounded>
-          <div class="text-h1">15</div>
+          <div class="text-h1">{{ recoveries }}</div>
           <div class="card-description">
             Одужань
           </div>
         </v-sheet>
         <v-sheet class="paper" color="white" elevation="2" outlined rounded>
-          <div class="text-h1">5</div>
+          <div class="text-h1">{{ deads }}</div>
           <div class="card-description">
             Летальних випадків
           </div>
@@ -58,6 +58,65 @@
 <script>
 import Highcharts from 'highcharts';
 export default {
+  loading: false,
+  async asyncData(ctx) {
+    const {
+      hospitals,
+      hospitalizations,
+      recoveries,
+      busyBeds,
+      totalBeds,
+      deads,
+      periods,
+      recoverySeries,
+      deadSeries,
+      hospitalizationSeries,
+    } = await ctx.$axios.$get('/api/stats');
+
+    return {
+      hospitals,
+      hospitalizations,
+      recoveries,
+      busyBeds,
+      totalBeds,
+      deads,
+      periods,
+      recoverySeries,
+      deadSeries,
+      hospitalizationSeries,
+    };
+  },
+  created() {
+    const repeat = async () => {
+      const {
+        hospitals,
+        hospitalizations,
+        recoveries,
+        busyBeds,
+        totalBeds,
+        deads,
+        periods,
+        recoverySeries,
+        deadSeries,
+        hospitalizationSeries,
+      } = await this.$axios.$get('/api/stats');
+
+      this.hospitals = hospitals;
+      this.hospitalizations = hospitalizations;
+      this.recoveries = recoveries;
+      this.busyBeds = busyBeds;
+      this.totalBeds = totalBeds;
+      this.deads = deads;
+      this.periods = periods;
+      this.recoverySeries = recoverySeries;
+      this.deadSeries = deadSeries;
+      this.hospitalizationSeries = hospitalizationSeries;
+
+      await repeat();
+    };
+
+    repeat();
+  },
   mounted() {
     Highcharts.setOptions({
       lang: {
@@ -115,7 +174,7 @@ export default {
           label: {
             connectorAllowed: false,
           },
-          pointStart: Number(new Date(2021, 4, 20)),
+          pointStart: Number(new Date(this.periods[0])),
           pointInterval: 24 * 3600 * 1000,
         },
       },
@@ -123,15 +182,15 @@ export default {
       series: [
         {
           name: 'Госпіталізацій',
-          data: [1, 3, 2, 5, 4, 6, 10],
+          data: this.hospitalizationSeries,
         },
         {
           name: 'Летальний випадок',
-          data: [0, 0, 0, 2, 0, 3, 1],
+          data: this.recoverySeries,
         },
         {
           name: 'Одужання',
-          data: [0, 0, 2, 3, 2, 4, 4],
+          data: this.deadSeries,
         },
       ],
 
@@ -152,6 +211,12 @@ export default {
         ],
       },
     });
+
+    setInterval(() => {
+      chart.series[0].setData(this.hospitalizationSeries);
+      chart.series[1].setData(this.recoverySeries);
+      chart.series[2].setData(this.deadSeries);
+    }, 500);
   },
   computed: {
     bedsPercent() {

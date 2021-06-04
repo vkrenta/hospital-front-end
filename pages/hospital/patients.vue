@@ -114,14 +114,19 @@ export default {
         '/api/patients/' + JSON.parse(localStorage.getItem('user')).hospitalId
       );
     },
-    onSubmitFile() {
+    async onSubmitFile() {
       // loading = true
       try {
         const bodyFormData = new FormData();
         bodyFormData.append('CSV', this.file);
         bodyFormData.append('HospitalId', this.hospitalId);
 
-        this.$axios.$post('/api/patients/csv', bodyFormData);
+        this.loading = true;
+        await this.$axios.$post('/api/patients/csv', bodyFormData);
+        setTimeout(() => {
+          this.loading = false;
+          this.csvOpened = false;
+        }, 1000);
       } catch (error) {
         console.log(error);
       }
